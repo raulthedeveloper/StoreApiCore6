@@ -1,4 +1,4 @@
-#nullable disable
+﻿#nullable disable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,14 +75,46 @@ namespace StoreApiCore.Controllers
 
         // POST: api/Carts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Cart>> PostCart(Cart cart)
-        {
-            _context.cart.Add(cart);
-            await _context.SaveChangesAsync();
+        //[HttpPost]
+        //public async Task<ActionResult<Cart>> PostCart(Cart cart)
+        //{
+        //    _context.cart.Add(cart);
+        //    await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCart", new { id = cart.id }, cart);
+        //    return CreatedAtAction("GetCart", new { id = cart.id }, cart);
+        //}
+
+        [HttpPost]
+        public ActionResult PostCart(Cart[] cart)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            DateTime date = DateTime.Now;
+
+            Random rnd = new Random();
+            int number = rnd.Next(1000000, 3000000);
+            string n = date.ToString("yyyyMMddHH");
+
+            foreach (Cart item in cart)
+            {
+                item.cartId = item.custId + n + number;
+
+                _context.cart.Add(item);
+                _context.SaveChanges();
+
+
+            }
+
+            return StatusCode(201);
+
+
+
         }
+
+
 
         // DELETE: api/Carts/5
         [HttpDelete("{id}")]

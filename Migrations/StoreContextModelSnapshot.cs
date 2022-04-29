@@ -25,7 +25,6 @@ namespace StoreApiCore.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("cartId")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("custId")
@@ -75,6 +74,10 @@ namespace StoreApiCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("first_name")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -83,9 +86,41 @@ namespace StoreApiCore.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("password")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.HasKey("id");
 
                     b.ToTable("customer");
+                });
+
+            modelBuilder.Entity("StoreApiCore.Models.CustomerShipping", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("custId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("state")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("streetAddress")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("zipCode")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("custId");
+
+                    b.ToTable("customer_shipping");
                 });
 
             modelBuilder.Entity("StoreApiCore.Models.HoursModel", b =>
@@ -247,6 +282,17 @@ namespace StoreApiCore.Migrations
                     b.Navigation("customer");
 
                     b.Navigation("product");
+                });
+
+            modelBuilder.Entity("StoreApiCore.Models.CustomerShipping", b =>
+                {
+                    b.HasOne("StoreApiCore.Models.Customer", "customer")
+                        .WithMany()
+                        .HasForeignKey("custId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("customer");
                 });
 
             modelBuilder.Entity("StoreApiCore.Models.HoursModel", b =>

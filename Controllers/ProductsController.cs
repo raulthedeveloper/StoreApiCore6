@@ -1,4 +1,4 @@
-#nullable disable
+﻿#nullable disable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,6 +98,37 @@ namespace StoreApiCore.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpGet("product_with_category")]
+        public IQueryable<Products> GetProductWithCat()
+        {
+            return _context.products.Include(e => e.category);
+        }
+
+
+        [HttpGet("ProductsPage/{catId}/{currentPage}")]
+
+        public ActionResult GetProductsPage(int catId, int currentPage)
+        {
+            // Improve Pagination for category pages
+            int pageSize = 3;
+
+            List<Products> products = _context.products.Where(e => e.catId == catId).OrderBy(e => e.id).Skip(pageSize * currentPage).Take(pageSize).ToList();
+
+            if (products.Count() < pageSize)
+            {
+                products.Count();
+
+                return Ok(_context.products.Where(e => e.catId == catId).OrderBy(e => e.id).ToList().Last());
+            }
+            else
+            {
+                products.Count();
+                return Ok(products);
+            }
+
+
         }
 
         private bool ProductsExists(int id)

@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace StoreApiCore.Models;
@@ -16,9 +16,12 @@ public class Category
 public class Products
 {
     public int id { get; set; }
+
     [ForeignKey("category")]
     public int catId { get; set; }
-    public Category category { get; set; }
+
+    public Category? category { get; set; }
+
     public string name { get; set; }
 
     public string description { get; set; }
@@ -35,7 +38,7 @@ public class Sales
     public int id { get; set; }
     [ForeignKey("product")]
     public int prodId { get; set; }
-    public Products product { get; set; }
+    public Products? product { get; set; }
     public int price { get; set; }
         
 }
@@ -43,22 +46,35 @@ public class Sales
 public class Customer
 {
     public int id { get; set; }
-    public string first_name { get; set; }
-    public string last_name { get; set; }
+    public string first_name { get; set; } = String.Empty;
+    public string last_name { get; set; } = String.Empty;
+    public string email { get; set; } = String.Empty;
+    public string password { get; set; } = String.Empty;
         
 
+}
+
+public class CustomerShipping
+{
+    public int id { get; set; }
+    [ForeignKey("customer")]
+    public int custId { get; set; }
+    public Customer? customer { get; set; }
+    public string streetAddress { get; set; } = String.Empty;
+    public string state { get; set; } = String.Empty;
+    public string zipCode { get; set; } = String.Empty;
 }
 
 public class Cart
 {
     public int id { get; set; }
-    public string cartId { get; set; }
+    public string? cartId { get; set; }
     [ForeignKey("customer")]
     public int custId { get; set; }
-    public Customer customer { get; set; }
+    public Customer? customer { get; set; }
     [ForeignKey("product")]
     public int prodId { get; set; }
-    public Products product { get; set; }
+    public Products? product { get; set; }
     public int quantity { get; set; }
 }
 
@@ -83,7 +99,7 @@ public class StoreContext : DbContext
        
        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
    }
-    
+    public DbSet<CustomerShipping> customer_shipping { get; set; }
     public DbSet<Category> categories { get; set; }
     public DbSet<Products> products { get; set; }
     public DbSet<Customer> customer { get; set; }
