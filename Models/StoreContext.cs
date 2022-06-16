@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using StoreApiCore.Models;
 
 namespace StoreApiCore.Models;
+
 
 public class Category
 {
@@ -74,6 +76,7 @@ public class Cart
     public Customer? customer { get; set; }
     [ForeignKey("product")]
     public int prodId { get; set; }
+    public DateTime date { get; set; }
     public Products? product { get; set; }
     public int quantity { get; set; }
 }
@@ -108,4 +111,5 @@ public class StoreContext : DbContext
     public DbSet<LocationModel> location { get; set; }
     public DbSet<HoursModel> hours { get; set; }  
     public DbSet<UnitedStates> UnitedStates { get; set; }
+    public DbSet<ProductShipping> productShippings { get; set; }
 }

@@ -21,6 +21,13 @@ namespace StoreApiCore.Controllers
             _context = context;
         }
 
+
+        [HttpGet("ProductByCategory/{id}")]
+        public ActionResult GetProductsByCategory(int id)
+        {
+            return Ok(_context.products.Where(x => x.catId == id).ToList());
+        }
+
         // GET: api/Products
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Products>>> Getproducts()

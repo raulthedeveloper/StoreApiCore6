@@ -14,6 +14,9 @@ namespace StoreApiCore.Controllers
     [ApiController]
     public class CartsController : ControllerBase
     {
+
+        private readonly DateTime date = DateTime.Now;
+
         private readonly StoreContext _context;
 
         public CartsController(StoreContext context)
@@ -92,15 +95,16 @@ namespace StoreApiCore.Controllers
                 return BadRequest(ModelState);
             }
 
-            DateTime date = DateTime.Now;
 
             Random rnd = new Random();
             int number = rnd.Next(1000000, 3000000);
-            string n = date.ToString("yyyyMMddHH");
+            string n = this.date.ToString("yyyyMMddHH");
 
             foreach (Cart item in cart)
             {
                 item.cartId = item.custId + n + number;
+
+                item.date = this.date;
 
                 _context.cart.Add(item);
                 _context.SaveChanges();
@@ -112,6 +116,18 @@ namespace StoreApiCore.Controllers
 
 
 
+        }
+
+        [HttpGet("customer_cart/{id}")]
+        public  IQueryable<object> CustomerCart(int id)
+        {
+            var query = from customer in _context.customer
+                        join cart in _context.cart on customer.id equals cart.id
+                        where customer.id == id
+                        select new { Customer = customer, Cart = cart };
+
+
+            return query;
         }
 
 
